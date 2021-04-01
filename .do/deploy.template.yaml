@@ -1,0 +1,9 @@
+spec:
+  name: rust-event-driven-simulation
+  static_sites:
+    - name: web
+      git:
+        branch: master
+        repo_clone_url: https://github.com/greshilov/rust-event-driven-simulation.git
+      dockerfile_path: Dockerfile
+      output_dir: /app/dist
