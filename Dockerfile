@@ -1,4 +1,7 @@
+# -- WASM Library --
 FROM rust:1.50 as builder
+
+ARG SDIR=rust-event-driven-simulation
 
 # Installing wasm-pack
 RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
@@ -6,21 +9,26 @@ RUN rustup target add wasm32-unknown-unknown
 
 # Instal&cache cargo dependencies
 RUN cargo new --lib /app
-COPY Cargo.toml Cargo.lock /app/
+COPY ./$SDIR/Cargo.toml ./$SDIR/Cargo.lock /app/
 
 WORKDIR /app
 RUN cargo fetch && rm -rf src
 
-COPY src src
-RUN wasm-pack build
+COPY ./$SDIR/ .
+RUN wasm-pack build --release
 
+# -- Frontend --
 FROM node:15
+
+ARG DDIR=rust-event-driven-demonstration
+ARG SDIR=rust-event-driven-simulation
+
 WORKDIR /app
-COPY --from=builder /app/pkg /pkg
+COPY --from=builder /app/pkg /$SDIR/pkg
 
 # Install&cache npm dependencies
-COPY ./demo/package-lock.json ./demo/package.json /app/
+COPY ./$DDIR/package-lock.json ./$DDIR/package.json /app/
 RUN npm install
 
-COPY ./demo/ /app/
+COPY ./$DDIR/ /app/
 RUN npm run build
