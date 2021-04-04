@@ -1,9 +1,15 @@
+domains:
+- domain: reds.greshilov.me
+  type: PRIMARY
 name: rust-event-driven-simulation
+region: fra
 static_sites:
-- name: site
+- dockerfile_path: Dockerfile
   github:
-    repo: greshilov/rust-event-driven-simulation
     branch: master
     deploy_on_push: true
-  dockerfile_path: Dockerfile
+    repo: greshilov/rust-event-driven-simulation
+  name: rust-event-driven-simulation
   output_dir: /app/dist
+  routes:
+  - path: /
