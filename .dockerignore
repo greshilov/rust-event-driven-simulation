@@ -1,7 +1,6 @@
-rust-event-driven-simulation/target/
 **/*.rs.bk
-rust-event-driven-simulation/bin/
-rust-event-driven-simulation/pkg/
-rust-event-driven-simulation/wasm-pack.log
+**/wasm-pack.log
 **/node_modules/
 **/dist/
+**/target
+**/pkg

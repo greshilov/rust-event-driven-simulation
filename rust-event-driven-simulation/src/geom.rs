@@ -1,5 +1,7 @@
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
+use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vec2 {
     pub x: f64,
@@ -104,12 +106,21 @@ impl Vec2 {
     }
 }
 
+/// Segment is a section between two points.
+/// Must always be imutable object, because `n`, `v`, `line`
+/// depend on `p1` and `p2` fields.
 #[derive(Clone, Copy, Debug)]
 pub struct Segment {
+    /// First point of the segment
     pub p1: Vec2,
+    /// Second point of the segment
     pub p2: Vec2,
+    /// Normal to segment (normalized one)
     pub n: Vec2,
+    /// Normalized vector that lies alongside the segment
     pub v: Vec2,
+    /// Line correspoding to the segment
+    pub line: Line,
 }
 
 impl Segment {
@@ -117,8 +128,9 @@ impl Segment {
         let v = (p2 - p1).normalize();
         // This is normalized normal, lol.
         let n = v.norm();
+        let line = Line::from_two_points(&p1, &p2);
 
-        Segment { p1, p2, n, v }
+        Segment { p1, p2, n, v, line }
     }
 
     pub fn create_rectangle_domain(origin: Vec2, width: f64, height: f64) -> Vec<Segment> {
@@ -187,12 +199,16 @@ impl Line {
         }
     }
 
-    pub fn from_segment(seg: &Segment) -> Line {
+    pub fn from_two_points(p1: &Vec2, p2: &Vec2) -> Line {
         Line {
-            a: seg.p1.y - seg.p2.y,
-            b: seg.p2.x - seg.p1.x,
-            c: seg.p1.x * seg.p2.y - seg.p2.x * seg.p1.y,
+            a: p1.y - p2.y,
+            b: p2.x - p1.x,
+            c: p1.x * p2.y - p2.x * p1.y,
         }
+    }
+
+    pub fn from_segment(seg: &Segment) -> Line {
+        Line::from_two_points(&seg.p1, &seg.p2)
     }
 
     pub fn intersect_line(&self, other: &Line) -> Option<Vec2> {

@@ -1,5 +1,8 @@
 use wasm_bindgen::prelude::*;
 
+use hmac::Hmac;
+use sha2::Sha256;
+
 #[wasm_bindgen]
 #[allow(dead_code)]
 pub fn set_panic_hook() {
@@ -25,3 +28,5 @@ pub fn compare_floats(a: f64, b: f64) {
     const EPS: f64 = 1e-12;
     assert!((a - b).abs() < EPS, "{} != {}", a, b);
 }
+
+pub type HmacSha256 = Hmac<Sha256>;

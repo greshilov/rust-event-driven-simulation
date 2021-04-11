@@ -1,7 +1,7 @@
-mod events;
-mod geom;
-mod particle;
-mod utils;
+pub mod geom;
+pub mod particle;
+pub mod simulation;
+pub mod utils;
 
 use wasm_bindgen::prelude::*;
 
@@ -15,3 +15,9 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 extern "C" {
     fn alert(s: &str);
 }
+
+pub(crate) const SECRET_KEY: &[u8] = match option_env!("SECRET_KEY") {
+    Some(value) => value,
+    None => "The Magic Words are Squeamish Ossifrage",
+}
+.as_bytes();

@@ -1,5 +1,37 @@
-use super::geom::{Line, Segment, Vec2};
+use super::geom::{Circle, Vec2};
+use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
+#[derive(Clone, Copy, PartialEq, Debug)]
+pub struct RGBA {
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
+    pub alpha: u8,
+}
+
+#[wasm_bindgen]
+impl RGBA {
+    pub fn new(red: u8, green: u8, blue: u8, alpha: u8) -> RGBA {
+        RGBA {
+            red,
+            green,
+            blue,
+            alpha,
+        }
+    }
+}
+
+impl RGBA {
+    pub fn as_css_hex(&self) -> String {
+        format!(
+            "#{:02X}{:02X}{:02X}{:02X}",
+            self.red, self.green, self.blue, self.alpha
+        )
+    }
+}
+
+#[wasm_bindgen]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Particle {
     pub pos: Vec2,
@@ -7,11 +39,19 @@ pub struct Particle {
     pub m: f64,
     pub r: f64,
     pub collisions_count: u64,
+    pub color: Option<RGBA>,
 }
 
 impl Particle {
     pub fn mv(&mut self, dt: f64) {
         self.pos += self.v * dt;
+    }
+
+    pub fn circle(&self) -> Circle {
+        Circle {
+            p: self.pos,
+            r: self.r,
+        }
     }
 }
 
@@ -50,6 +90,13 @@ pub mod pvp {
         }
     }
 
+    pub fn is_collision(left: &Particle, right: &Particle) -> bool {
+        if left == right {
+            return false;
+        }
+        (right.pos - left.pos).len_sqr() < (right.r + left.r) * (right.r + left.r)
+    }
+
     pub fn collision(left: &Particle, right: &Particle) -> (Particle, Particle) {
         let dr = right.pos - left.pos;
         let dv = right.v - left.v;
@@ -74,7 +121,8 @@ pub mod pvp {
 
 // Particle vs Segment
 pub mod pvc {
-    use super::{Line, Particle, Segment};
+    use super::Particle;
+    use crate::geom::{LCIntersection, Line, Segment};
 
     pub fn time_to_hit(left: &Particle, right: &Segment) -> Option<f64> {
         if left.v.x == 0. && left.v.y == 0. {
@@ -82,7 +130,7 @@ pub mod pvc {
         }
 
         let movement_line = Line::from_vec_n_point(&left.v, &left.pos);
-        let segment_line = Line::from_segment(&right);
+        let segment_line = right.line;
 
         if let Some(intrsct_p) = movement_line.intersect_line(&segment_line) {
             let ray = intrsct_p - left.pos;
@@ -99,7 +147,7 @@ pub mod pvc {
             let bp1 = intrsct_p - circle_proj;
             let bp2 = intrsct_p + circle_proj;
 
-            // We know, that points "bp1" and bp2" lies on the
+            // We know, that points "bp1" and bp2" lie on the
             // "segment_line", so we can just compare coordinates
             // to check whether "bp1" or "bp2" placed inside the segment "right"
             if !right.contains_point(&bp1) && !right.contains_point(&bp2) {
@@ -119,6 +167,16 @@ pub mod pvc {
         None
     }
 
+    pub fn is_collision(left: &Particle, right: &Segment) -> bool {
+        match right.line.intersect_circle(&left.circle()) {
+            LCIntersection::OnePoint(p) => right.contains_point(&p),
+            LCIntersection::TwoPoint((p1, p2)) => {
+                right.contains_point(&p1) || right.contains_point(&p2)
+            }
+            LCIntersection::None => false,
+        }
+    }
+
     pub fn collision(left: &Particle, right: &Segment) -> Particle {
         let mut new_left = left.clone();
         new_left.v = new_left.v - right.n * (new_left.v * right.n * 2.);
@@ -130,7 +188,27 @@ pub mod pvc {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::geom::Segment;
     use crate::utils::compare_floats;
+
+    #[test]
+    fn test_rgba() {
+        let rgba = RGBA {
+            red: 255,
+            green: 0,
+            blue: 0,
+            alpha: 0,
+        };
+        assert_eq!(rgba.as_css_hex(), "#FF000000");
+
+        let rgba = RGBA {
+            red: 128,
+            green: 64,
+            blue: 192,
+            alpha: 192,
+        };
+        assert_eq!(rgba.as_css_hex(), "#8040C0C0");
+    }
 
     #[test]
     fn test_particle_v_particle_time_to_hit() {
@@ -146,6 +224,7 @@ mod tests {
             m: 1.0,
             r: 0.2,
             collisions_count: 0,
+            color: None,
         };
 
         let p_2 = Particle {
@@ -154,6 +233,7 @@ mod tests {
             m: 1.0,
             r: 0.2,
             collisions_count: 0,
+            color: None,
         };
 
         compare_floats(pvp::time_to_hit(&p_1, &p_2).unwrap(), 1.3);
@@ -170,6 +250,7 @@ mod tests {
             m: 1.0,
             r: 0.2,
             collisions_count: 0,
+            color: None,
         };
 
         let seg_1 = Vec2 { x: 3.0, y: 0.0 };
@@ -192,6 +273,7 @@ mod tests {
             m: 1.0,
             r: 2.5,
             collisions_count: 0,
+            color: None,
         };
 
         let seg_1 = Vec2 { x: 0.0, y: 0.0 };
@@ -213,6 +295,7 @@ mod tests {
             m: 1.0,
             r: 1.4,
             collisions_count: 0,
+            color: None,
         };
 
         let seg_1 = Vec2 { x: 0.0, y: 0.0 };
@@ -234,6 +317,7 @@ mod tests {
             m: 1.0,
             r: 1.0,
             collisions_count: 0,
+            color: None,
         };
 
         let seg_1 = Vec2 { x: 0.0, y: 0.0 };
@@ -258,6 +342,7 @@ mod tests {
             m: 1.0,
             r: 1.0,
             collisions_count: 0,
+            color: None,
         };
 
         let p_2 = Particle {
@@ -266,6 +351,7 @@ mod tests {
             m: 1.0,
             r: 1.0,
             collisions_count: 0,
+            color: None,
         };
 
         let (pn_1, pn_2) = pvp::collision(&p_1, &p_2);
@@ -288,6 +374,7 @@ mod tests {
             m: 1.0,
             r: 1.0,
             collisions_count: 0,
+            color: None,
         };
 
         let seg_1 = Vec2 { x: 0.0, y: 0.0 };
