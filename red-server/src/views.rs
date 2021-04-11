@@ -5,7 +5,7 @@ use crate::schema::*;
 
 use rocket_contrib::json::{Json, JsonValue};
 
-use rust_event_driven_simulation::simulation::SignedGameResult;
+use red_simulation::simulation::SignedGameResult;
 
 #[get("/api/top")]
 pub fn top_scores() -> Json<Vec<Score>> {

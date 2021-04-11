@@ -1,5 +1,5 @@
 [package]
-name = "rust-event-driven-simulation"
+name = "red-simulation"
 version = "0.1.0"
 authors = ["Viacheslav Greshilov <slovaricheg@gmail.com>"]
 edition = "2018"

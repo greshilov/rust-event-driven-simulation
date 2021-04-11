@@ -1,5 +1,5 @@
 {
-  "name": "rust-event-driven-demonstration",
+  "name": "red-demonstration",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,7 +11,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta3",
     "core-js": "^3.6.5",
-    "rust-event-driven-simulation": "file:../rust-event-driven-simulation/pkg",
+    "red-simulation": "file:../red-simulation/pkg",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0"
   },

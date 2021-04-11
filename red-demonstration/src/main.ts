@@ -5,7 +5,7 @@ import router from "./router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
-import { set_panic_hook } from "rust-event-driven-simulation";
+import { set_panic_hook } from "red-simulation";
 
 set_panic_hook();
 const app = createApp(App);

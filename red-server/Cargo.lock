@@ -815,11 +815,25 @@ dependencies = [
  "chrono",
  "diesel",
  "dotenv",
+ "red-simulation",
  "rocket",
  "rocket_contrib",
- "rust-event-driven-simulation",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "red-simulation"
+version = "0.1.0"
+dependencies = [
+ "console_error_panic_hook",
+ "hmac",
+ "js-sys",
+ "serde",
+ "serde_json",
+ "sha2",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
@@ -895,20 +909,6 @@ dependencies = [
  "state",
  "time",
  "unicode-xid 0.1.0",
-]
-
-[[package]]
-name = "rust-event-driven-simulation"
-version = "0.1.0"
-dependencies = [
- "console_error_panic_hook",
- "hmac",
- "js-sys",
- "serde",
- "serde_json",
- "sha2",
- "wasm-bindgen",
- "web-sys",
 ]
 
 [[package]]

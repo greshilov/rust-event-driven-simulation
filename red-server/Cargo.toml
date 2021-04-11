@@ -14,4 +14,4 @@ chrono = { version = "0.4.19", features = ["serde"] }
 rocket_contrib = { version = "0.4.7", features = ["json"] }
 serde = { version = "1.0.125", features = ["derive"] }
 serde_json = "1.0.64"
-rust-event-driven-simulation = { path = "../rust-event-driven-simulation/" }
+red-simulation = { path = "../red-simulation/" }

@@ -1,7 +1,7 @@
 # -- WASM Library --
 FROM rust:1.50 as builder
 
-ARG SDIR=rust-event-driven-simulation
+ARG SDIR=red-simulation
 
 # Installing wasm-pack
 RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
@@ -20,8 +20,8 @@ RUN wasm-pack build --release
 # -- Frontend --
 FROM node:15
 
-ARG DDIR=rust-event-driven-demonstration
-ARG SDIR=rust-event-driven-simulation
+ARG DDIR=red-demonstration
+ARG SDIR=red-simulation
 
 WORKDIR /app
 COPY --from=builder /app/pkg /$SDIR/pkg

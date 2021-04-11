@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, PropType, Ref } from "vue";
-import { Simulation, RGBA } from "rust-event-driven-simulation";
+import { Simulation, RGBA } from "red-simulation";
 import axios from 'axios';
 
 export interface Particle {
