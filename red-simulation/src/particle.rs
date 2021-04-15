@@ -1,8 +1,9 @@
 use super::geom::{Circle, Vec2};
+use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, PartialEq, Debug, Serialize, Deserialize)]
 pub struct RGBA {
     pub red: u8,
     pub green: u8,
@@ -32,7 +33,7 @@ impl RGBA {
 }
 
 #[wasm_bindgen]
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 pub struct Particle {
     pub pos: Vec2,
     pub v: Vec2,
@@ -40,6 +41,28 @@ pub struct Particle {
     pub r: f64,
     pub collisions_count: u64,
     pub color: Option<RGBA>,
+}
+
+#[wasm_bindgen]
+impl Particle {
+    pub fn new(
+        px: f64,
+        py: f64,
+        vx: f64,
+        vy: f64,
+        m: f64,
+        r: f64,
+        color: Option<RGBA>,
+    ) -> Particle {
+        Particle {
+            pos: Vec2 { x: px, y: py },
+            v: Vec2 { x: vx, y: vy },
+            m,
+            r,
+            collisions_count: 0,
+            color,
+        }
+    }
 }
 
 impl Particle {

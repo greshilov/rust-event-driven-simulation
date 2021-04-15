@@ -16,6 +16,8 @@ extern "C" {
     fn alert(s: &str);
 }
 
+// Anyone eager enough can find this secret key in the result binary,
+// it's just a minimal protection measure :)
 pub(crate) const SECRET_KEY: &[u8] = match option_env!("SECRET_KEY") {
     Some(value) => value,
     None => "The Magic Words are Squeamish Ossifrage",

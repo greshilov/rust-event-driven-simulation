@@ -8,7 +8,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::CanvasRenderingContext2d;
 
 use super::geom::{Segment, Vec2};
-use super::particle::{pvc, pvp, Particle, RGBA};
+use super::particle::{pvc, pvp, Particle};
 use super::utils::HmacSha256;
 
 #[wasm_bindgen]
@@ -24,11 +24,23 @@ pub struct Simulation {
     tick_time: f64,
 
     game_params: Option<GameParams>,
+    draw_params: DrawParams,
 }
 
 #[wasm_bindgen]
 impl Simulation {
-    pub fn new(width: f64, height: f64, ticks_per_sec: f64) -> Self {
+    pub fn new(
+        width: f64,
+        height: f64,
+        ticks_per_sec: f64,
+        draw_params: Option<DrawParams>,
+    ) -> Self {
+        let draw_params = if let Some(config) = draw_params {
+            config
+        } else {
+            Default::default()
+        };
+
         Simulation {
             w: width,
             h: height,
@@ -40,6 +52,7 @@ impl Simulation {
             ticks_per_sec: ticks_per_sec as u32,
             tick_time: 1. / ticks_per_sec,
             game_params: None,
+            draw_params,
         }
     }
 
@@ -63,27 +76,9 @@ impl Simulation {
 
     // Adds particle with `(px, py)` coordinates, `(vx, vy)` speed vector, `m` mass and `r` radius.
     // Returns index of the added particle.
-    pub fn add_particle(
-        &mut self,
-        px: f64,
-        py: f64,
-        vx: f64,
-        vy: f64,
-        m: f64,
-        r: f64,
-        color: Option<RGBA>,
-    ) -> Option<usize> {
-        let particle = Particle {
-            pos: Vec2 { x: px, y: py },
-            v: Vec2 { x: vx, y: vy },
-            m,
-            r,
-            collisions_count: 0,
-            color,
-        };
-
+    pub fn add_particle(&mut self, particle: &Particle) -> Option<usize> {
         if !self.is_collission(&particle) {
-            self.particles.push(particle);
+            self.particles.push(*particle);
             self.initialized = false;
             Some(self.particles.len() - 1)
         } else {
@@ -172,7 +167,13 @@ impl Simulation {
             ctx.stroke();
         }
 
-        for segment in &self.segments {
+        let segments_to_draw = if self.draw_params.borders {
+            &self.segments[..]
+        } else {
+            &self.segments[4..]
+        };
+
+        for segment in segments_to_draw {
             ctx.begin_path();
             ctx.move_to(segment.p1.x, segment.p1.y);
             ctx.line_to(segment.p2.x, segment.p2.y);
@@ -300,6 +301,12 @@ impl Simulation {
         self.ticks_per_sec = ticks_per_sec;
         self.tick_time = 1. / ticks_per_sec as f64;
         self.initialized = false;
+    }
+
+    // This function has serious performance penalties. 
+    // Use with caution.
+    pub fn get_particles(&self) -> JsValue {
+        JsValue::from_serde(&self.particles.clone()).unwrap()
     }
 }
 
@@ -436,5 +443,18 @@ impl SignedGameResult {
     pub fn verify(&self, secret: &[u8]) -> bool {
         let mac = self.game_result.hmac(secret);
         mac.verify(&self.hex_digest).is_ok()
+    }
+}
+
+#[wasm_bindgen]
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct DrawParams {
+    pub borders: bool,
+}
+
+#[wasm_bindgen]
+impl DrawParams {
+    pub fn new(borders: bool) -> DrawParams {
+        DrawParams { borders }
     }
 }

@@ -149,7 +149,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-event-driven-simulation"
+name = "red-simulation"
 version = "0.1.0"
 dependencies = [
  "console_error_panic_hook",

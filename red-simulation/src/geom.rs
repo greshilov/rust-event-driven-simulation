@@ -1,8 +1,9 @@
+use serde::{Deserialize, Serialize};
 use std::ops::{Add, AddAssign, Mul, Sub, SubAssign};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Vec2 {
     pub x: f64,
     pub y: f64,

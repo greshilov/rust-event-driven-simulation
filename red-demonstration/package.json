@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "red-simulation": "file:../red-simulation/pkg",
     "vue": "^3.0.0",
+    "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
@@ -30,6 +31,8 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.0.0",
     "prettier": "^2.2.1",
+    "sass": "^1.26.5",
+    "sass-loader": "^9.0.0",
     "typescript": "~4.1.5",
     "wasm-loader": "^1.3.0"
   },
@@ -39,7 +42,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/vue3-recommended",
+      "plugin:vue/vue3-essential",
       "eslint:recommended",
       "@vue/typescript/recommended",
       "@vue/prettier",
@@ -51,7 +54,7 @@
     "rules": {}
   },
   "eslintIgnore": [
-    "../rust-event-driven-simulation/pkg"
+    "../red-simulation/pkg"
   ],
   "browserslist": [
     "> 1%",
