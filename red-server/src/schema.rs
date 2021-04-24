@@ -1,8 +1,9 @@
 table! {
     scores (id) {
         id -> Int4,
-        name -> Varchar,
+        player_name -> Varchar,
         score -> Int8,
         created_at -> Timestamptz,
+        player_uuid -> Uuid,
     }
 }

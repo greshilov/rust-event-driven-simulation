@@ -3,14 +3,22 @@ module.exports = {
     config.entry("app").clear();
     config.entry("app").add("./src/bootstrap.js");
   },
+
+  css: {
+    loaderOptions: {
+      sass: {
+        additionalData: '@import "@/scss/variables.scss";',
+      },
+    },
+  },
   devServer: {
     proxy: {
-      '^/api': {
-        target: 'http://localhost:8000',
+      "^/api": {
+        target: "http://localhost:8000",
         changeOrigin: true,
         secure: false,
-        logLevel: "debug"
+        logLevel: "debug",
       },
-    }
+    },
   },
 };

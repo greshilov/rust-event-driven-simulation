@@ -6,6 +6,7 @@ services:
     volumes:
       - reds-postgres-data:/var/lib/postgresql/data
     env_file: .env
+    command: ["postgres", "-c", "log_statement=all"]
     ports:
     - 5432:5432
 volumes:

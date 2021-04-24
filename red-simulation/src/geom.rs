@@ -12,6 +12,7 @@ pub struct Vec2 {
 impl Add for Vec2 {
     type Output = Self;
 
+    #[inline]
     fn add(self, other: Self) -> Self {
         Self {
             x: self.x + other.x,
@@ -21,6 +22,7 @@ impl Add for Vec2 {
 }
 
 impl AddAssign for Vec2 {
+    #[inline]
     fn add_assign(&mut self, other: Self) {
         self.x += other.x;
         self.y += other.y;
@@ -30,6 +32,7 @@ impl AddAssign for Vec2 {
 impl Sub for Vec2 {
     type Output = Self;
 
+    #[inline]
     fn sub(self, other: Self) -> Self {
         Self {
             x: self.x - other.x,
@@ -39,6 +42,7 @@ impl Sub for Vec2 {
 }
 
 impl SubAssign for Vec2 {
+    #[inline]
     fn sub_assign(&mut self, other: Self) {
         self.x -= other.x;
         self.y -= other.y;
@@ -48,6 +52,7 @@ impl SubAssign for Vec2 {
 impl Mul<f64> for Vec2 {
     type Output = Self;
 
+    #[inline]
     fn mul(self, rhs: f64) -> Self::Output {
         Self {
             x: self.x * rhs,
@@ -59,12 +64,18 @@ impl Mul<f64> for Vec2 {
 impl Mul<Vec2> for Vec2 {
     type Output = f64;
 
+    #[inline]
     fn mul(self, other: Self) -> Self::Output {
         self.x * other.x + self.y * other.y
     }
 }
 
 impl Vec2 {
+    #[inline]
+    pub fn is_zero(&self) -> bool {
+        self.x == 0. && self.y == 0.
+    }
+
     pub fn len(&self) -> f64 {
         (self.len_sqr()).sqrt()
     }
@@ -110,6 +121,7 @@ impl Vec2 {
 /// Segment is a section between two points.
 /// Must always be imutable object, because `n`, `v`, `line`
 /// depend on `p1` and `p2` fields.
+#[wasm_bindgen]
 #[derive(Clone, Copy, Debug)]
 pub struct Segment {
     /// First point of the segment
@@ -124,8 +136,15 @@ pub struct Segment {
     pub line: Line,
 }
 
+#[wasm_bindgen]
 impl Segment {
-    pub fn new(p1: Vec2, p2: Vec2) -> Segment {
+    pub fn new(ax: f64, ay: f64, bx: f64, by: f64) -> Segment {
+        Segment::from_points(Vec2 { x: ax, y: ay }, Vec2 { x: bx, y: by })
+    }
+}
+
+impl Segment {
+    pub fn from_points(p1: Vec2, p2: Vec2) -> Segment {
         let v = (p2 - p1).normalize();
         // This is normalized normal, lol.
         let n = v.norm();
@@ -153,10 +172,10 @@ impl Segment {
         };
 
         vec![
-            Segment::new(a, b),
-            Segment::new(b, c),
-            Segment::new(c, d),
-            Segment::new(d, a),
+            Segment::from_points(a, b),
+            Segment::from_points(b, c),
+            Segment::from_points(c, d),
+            Segment::from_points(d, a),
         ]
     }
 
@@ -171,6 +190,7 @@ pub struct Circle {
     pub r: f64,
 }
 
+#[wasm_bindgen]
 #[derive(Clone, Copy, Debug)]
 pub struct Line {
     pub a: f64,

@@ -1,15 +1,16 @@
-use std::cmp::Ordering;
-use std::collections::BinaryHeap;
+use std::collections::{BinaryHeap, HashSet};
 
-use hmac::{Mac, NewMac};
-use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
+use serde::{Deserialize, Serialize};
 use web_sys::CanvasRenderingContext2d;
 
+use super::collisions::{pvp, pvs, Collision, CollisionEvent, CollisionPair};
+use super::game::GameParams;
 use super::geom::{Segment, Vec2};
-use super::particle::{pvc, pvp, Particle};
-use super::utils::HmacSha256;
+use super::particle::Particle;
+
+use crate::log;
 
 #[wasm_bindgen]
 pub struct Simulation {
@@ -19,7 +20,7 @@ pub struct Simulation {
     segments: Vec<Segment>,
     particles: Vec<Particle>,
     events: BinaryHeap<CollisionEvent>,
-    t: u64,
+    t: f64,
     ticks_per_sec: u32,
     tick_time: f64,
 
@@ -32,7 +33,7 @@ impl Simulation {
     pub fn new(
         width: f64,
         height: f64,
-        ticks_per_sec: f64,
+        ticks_per_sec: u32,
         draw_params: Option<DrawParams>,
     ) -> Self {
         let draw_params = if let Some(config) = draw_params {
@@ -48,9 +49,9 @@ impl Simulation {
             segments: Segment::create_rectangle_domain(Vec2 { x: 0., y: 0. }, width, height),
             particles: Vec::new(),
             events: BinaryHeap::new(),
-            t: 0,
-            ticks_per_sec: ticks_per_sec as u32,
-            tick_time: 1. / ticks_per_sec,
+            t: 0.,
+            ticks_per_sec: ticks_per_sec,
+            tick_time: 1. / (ticks_per_sec as f64),
             game_params: None,
             draw_params,
         }
@@ -60,12 +61,8 @@ impl Simulation {
         self.game_params.is_some()
     }
 
-    fn time_to_ticks(&self, t: f64) -> u64 {
-        self.t + (t * self.ticks_per_sec as f64).round() as u64
-    }
-
-    /// Drops event queue and initializes the simulation,
-    /// in case of any changes in parameters or particles.
+    // Drops event queue and initializes the simulation,
+    // in case of any changes in parameters or particles.
     fn init(&mut self) {
         self.events.clear();
         for l in 0..self.particles.len() {
@@ -74,39 +71,48 @@ impl Simulation {
         self.initialized = true;
     }
 
-    // Adds particle with `(px, py)` coordinates, `(vx, vy)` speed vector, `m` mass and `r` radius.
+    // Adds particle to simulation
     // Returns index of the added particle.
     pub fn add_particle(&mut self, particle: &Particle) -> Option<usize> {
-        if !self.is_collission(&particle) {
+        if self.is_collission(&particle) {
+            log!(
+                "Warning: can't add particle {:?}, that collides with other particles.",
+                particle
+            );
+            None
+        } else {
             self.particles.push(*particle);
             self.initialized = false;
             Some(self.particles.len() - 1)
-        } else {
-            None
         }
     }
 
-    // Choose one of the particles as player's
-    // and thus activate game mode.
-    pub fn set_player_particle(
+    // Player's to simulation
+    // and thus activates game mode.
+    pub fn add_player_particle(
         &mut self,
-        index: usize,
+        particle: &Particle,
+        player_uuid: &str,
         player_name: &str,
         game_end_cb: js_sys::Function,
-    ) {
-        if index < self.particles.len() {
-            self.particles[index].v = Vec2 { x: 0., y: 0. };
+    ) -> Option<usize> {
+        let mut particle = particle.clone();
+        particle.v = Vec2 { x: 0., y: 0. };
+        let add_result = self.add_particle(&particle);
 
+        if let Some(index) = add_result {
             self.game_params = Some(GameParams::new(
                 index,
+                player_uuid.to_owned(),
                 player_name.to_owned(),
                 self.t,
                 game_end_cb,
             ));
         }
+        add_result
     }
 
-    // Check wether any collision with `particle` is happening now
+    // Checks wether any collision with `particle` is happening now.
     fn is_collission(&self, particle: &Particle) -> bool {
         for p in &self.particles {
             if pvp::is_collision(&p, &particle) {
@@ -114,21 +120,25 @@ impl Simulation {
             }
         }
         for s in &self.segments {
-            if pvc::is_collision(&particle, &s) {
+            if pvs::is_collision(&particle, &s) {
                 return true;
             }
         }
         false
     }
 
-    // Move previously chosen players's particle to some point
+    // Moves previously added players's particle to some point.
     pub fn mv_player_particle(&mut self, px: f64, py: f64) {
         if let Some(g_params) = &self.game_params {
             self.particles[g_params.p_particle].pos = Vec2 { x: px, y: py };
             self.initialized = false;
+        } else {
+            log!("Warning! Game mode is inactive, add the player's particle first.")
         }
     }
 
+    // Checks whether the player's particle has collided.
+    #[inline]
     fn explicitly_check_player_particle(&mut self) {
         if let Some(gp) = &self.game_params {
             if self.is_collission(&self.particles[gp.p_particle]) {
@@ -140,9 +150,8 @@ impl Simulation {
         }
     }
 
-    pub fn add_segment(&mut self, ax: f64, ay: f64, bx: f64, by: f64) {
-        self.segments
-            .push(Segment::new(Vec2 { x: ax, y: ay }, Vec2 { x: bx, y: by }));
+    pub fn add_segment(&mut self, segment: &Segment) {
+        self.segments.push(*segment);
         self.initialized = false;
     }
 
@@ -183,7 +192,7 @@ impl Simulation {
     }
 
     // This function called after a collision
-    fn update_particle(&mut self, i: usize, new_particle: Particle) {
+    fn update_particle(&mut self, i: usize, new_particle: Particle, _cp: &CollisionPair) {
         // Whoops, player's particle collided - game over.
         if self
             .game_params
@@ -204,12 +213,10 @@ impl Simulation {
     fn calculate_particle_events(&mut self, l: usize) {
         let left = self.particles[l];
 
-        for r in 0..self.particles.len() {
-            let right = self.particles[r];
-
+        for (r, right) in self.particles.iter().enumerate() {
             if let Some(hit_time) = pvp::time_to_hit(&left, &right) {
                 self.events.push(CollisionEvent {
-                    t: self.time_to_ticks(hit_time),
+                    t: self.t + hit_time,
                     collision: Collision::ParticleVsParticle {
                         p1: l,
                         p2: r,
@@ -220,12 +227,10 @@ impl Simulation {
             }
         }
 
-        for s in 0..self.segments.len() {
-            let segment = self.segments[s];
-
-            if let Some(t) = pvc::time_to_hit(&left, &segment) {
+        for (s, segment) in self.segments.iter().enumerate() {
+            if let Some(t) = pvs::time_to_hit(&left, &segment) {
                 self.events.push(CollisionEvent {
-                    t: self.time_to_ticks(t),
+                    t: self.t + t,
                     collision: Collision::ParticleVsSegment {
                         p: l,
                         s: s,
@@ -236,10 +241,13 @@ impl Simulation {
         }
     }
 
-    pub fn tick_for_fps(&mut self, fps: u32) {
-        let target = self.t + (self.ticks_per_sec / fps) as u64;
-        while self.t <= target {
-            self.tick();
+    #[inline]
+    fn mv(&mut self, t: f64) {
+        if self.t < t {
+            for particle in &mut self.particles {
+                particle.mv(t - self.t);
+            }
+            self.t = t;
         }
     }
 
@@ -250,9 +258,18 @@ impl Simulation {
 
         self.explicitly_check_player_particle();
 
+        let mut collisions_happend: HashSet<CollisionPair> = HashSet::new();
+        let target_time = self.t + self.tick_time;
+
         while let Some(event) = self.events.peek() {
-            if event.t == self.t {
+            if event.t <= target_time {
                 let event = self.events.pop().unwrap();
+                let collision_pair: CollisionPair = event.collision.into();
+
+                if collisions_happend.contains(&collision_pair) {
+                    continue;
+                }
+
                 match event.collision {
                     Collision::ParticleVsParticle {
                         p1,
@@ -266,8 +283,9 @@ impl Simulation {
                         if left.collisions_count == p1_cc && right.collisions_count == p2_cc {
                             let (n_left, n_right) = pvp::collision(&left, &right);
 
-                            self.update_particle(p1, n_left);
-                            self.update_particle(p2, n_right);
+                            self.update_particle(p1, n_left, &collision_pair);
+                            self.update_particle(p2, n_right, &collision_pair);
+                            collisions_happend.insert(collision_pair);
                         }
                     }
                     Collision::ParticleVsSegment { p, s, p_cc } => {
@@ -275,26 +293,34 @@ impl Simulation {
 
                         if particle.collisions_count == p_cc {
                             let segment = self.segments[s];
-                            let n_particle = pvc::collision(&particle, &segment);
+                            let n_particle = pvs::collision(&particle, &segment);
 
-                            self.update_particle(p, n_particle);
+                            self.update_particle(p, n_particle, &collision_pair);
+                            collisions_happend.insert(collision_pair);
                         }
                     }
+                }
+
+                if self.t < event.t {
+                    collisions_happend.clear();
+                    self.mv(event.t);
                 }
             } else {
                 break;
             }
         }
 
-        for particle in &mut self.particles {
-            particle.mv(self.tick_time);
-        }
-
-        self.t += 1;
+        self.mv(target_time);
     }
 
     pub fn current_tick(&self) -> f64 {
         self.t as f64
+    }
+
+    pub fn get_current_score(&self) -> Option<u32> {
+        self.game_params
+            .as_ref()
+            .map_or(None, |gp| Some(gp.get_score(self.t)))
     }
 
     pub fn set_ticks_per_sec(&mut self, ticks_per_sec: u32) {
@@ -303,146 +329,10 @@ impl Simulation {
         self.initialized = false;
     }
 
-    // This function has serious performance penalties. 
-    // Use with caution.
+    // This function has serious performance penalties.
+    // Use it with caution.
     pub fn get_particles(&self) -> JsValue {
         JsValue::from_serde(&self.particles.clone()).unwrap()
-    }
-}
-
-#[derive(Debug, Clone, Copy)]
-pub enum Collision {
-    ParticleVsParticle {
-        // Indexes of particles
-        p1: usize,
-        p2: usize,
-        // cc - Collisions count
-        p1_cc: u64,
-        p2_cc: u64,
-    },
-    ParticleVsSegment {
-        p: usize,
-        s: usize,
-        p_cc: u64,
-    },
-}
-
-#[derive(Debug, Clone, Copy)]
-pub struct CollisionEvent {
-    pub t: u64,
-    pub collision: Collision,
-}
-
-impl PartialEq for CollisionEvent {
-    fn eq(&self, other: &CollisionEvent) -> bool {
-        self.t == other.t
-    }
-}
-
-impl Eq for CollisionEvent {}
-
-impl Ord for CollisionEvent {
-    fn cmp(&self, other: &CollisionEvent) -> Ordering {
-        // Reversed order for a min queue.
-        other.t.cmp(&self.t)
-    }
-}
-
-impl PartialOrd for CollisionEvent {
-    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-pub struct GameParams {
-    // Player's particle index
-    p_particle: usize,
-    player_name: String,
-    game_end_cb: js_sys::Function,
-
-    game_started_tick: u64,
-    game_ended: bool,
-}
-
-impl GameParams {
-    pub fn new(
-        p_particle: usize,
-        player_name: String,
-        game_started_tick: u64,
-        game_end_cb: js_sys::Function,
-    ) -> GameParams {
-        GameParams {
-            p_particle,
-            player_name,
-            game_end_cb,
-            game_started_tick,
-            game_ended: false,
-        }
-    }
-
-    pub fn game_over(&mut self, tick: u64, ticks_per_sec: u32) {
-        // Event must fire only once per attempt
-        if !self.game_ended {
-            self.game_ended = true;
-
-            let score = tick - self.game_started_tick;
-
-            let signed_result = SignedGameResult::from_game_result(
-                GameResult {
-                    player_name: self.player_name.clone(),
-                    score,
-                    ticks_per_sec,
-                },
-                &crate::SECRET_KEY,
-            );
-
-            let this = JsValue::from(JsValue::null());
-            let result = JsValue::from_serde(&signed_result).unwrap();
-            self.game_end_cb.call1(&this, &result).unwrap();
-        }
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct GameResult {
-    pub player_name: String,
-    pub score: u64,
-    pub ticks_per_sec: u32,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct SignedGameResult {
-    pub game_result: GameResult,
-    pub hex_digest: Vec<u8>,
-}
-
-impl GameResult {
-    pub fn hmac(&self, secret: &[u8]) -> HmacSha256 {
-        let mut mac =
-            HmacSha256::new_varkey(&secret).expect("Invalid secret, unable to build hmac.");
-        mac.update(&self.player_name.as_bytes());
-        mac.update(&self.score.to_be_bytes());
-        mac.update(&self.ticks_per_sec.to_be_bytes());
-        mac
-    }
-
-    pub fn hex_digest(&self, secret: &[u8]) -> Vec<u8> {
-        self.hmac(secret).finalize().into_bytes().as_slice().into()
-    }
-}
-
-impl SignedGameResult {
-    pub fn from_game_result(gr: GameResult, secret: &[u8]) -> SignedGameResult {
-        let hex_digest = gr.hex_digest(secret);
-        SignedGameResult {
-            game_result: gr,
-            hex_digest,
-        }
-    }
-
-    pub fn verify(&self, secret: &[u8]) -> bool {
-        let mac = self.game_result.hmac(secret);
-        mac.verify(&self.hex_digest).is_ok()
     }
 }
 

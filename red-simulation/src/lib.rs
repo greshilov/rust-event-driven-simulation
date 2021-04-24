@@ -1,3 +1,5 @@
+pub mod collisions;
+pub mod game;
 pub mod geom;
 pub mod particle;
 pub mod simulation;

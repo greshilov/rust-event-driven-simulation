@@ -1,21 +1,18 @@
 <template>
-  <div class="container">
-    <Navbar :routes="routesList" />
+  <main>
     <router-view />
-  </div>
+  </main>
 </template>
 
 <script lang="ts">
+import "@/scss/base.scss";
 import { defineComponent } from "vue";
 
-import Navbar from "@/components/Navbar.vue";
 import routes from "@/router";
 
 export default defineComponent({
   name: "App",
-  components: {
-    Navbar,
-  },
+  components: {},
   computed: {
     routesList: () => {
       return routes.getRoutes();
@@ -23,9 +20,3 @@ export default defineComponent({
   },
 });
 </script>
-<style>
-body {
-  font-size: 14px;
-  font-weight: 400;
-}
-</style>

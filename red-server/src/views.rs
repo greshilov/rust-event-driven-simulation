@@ -4,13 +4,16 @@ use crate::models::*;
 use crate::schema::*;
 
 use rocket_contrib::json::{Json, JsonValue};
+use uuid::Uuid;
 
-use red_simulation::simulation::SignedGameResult;
+use red_simulation::game::SignedGameResult;
 
 #[get("/api/top")]
 pub fn top_scores() -> Json<Vec<Score>> {
     let scores: Vec<Score> = scores::table
         .select(scores::all_columns)
+        .order(scores::score.desc())
+        .limit(10)
         .load::<Score>(&crate::establish_connection())
         .expect("Whoops, like this went bananas!");
 
@@ -27,7 +30,8 @@ pub fn submit_scores(sgr_json: Json<SignedGameResult>) -> JsonValue {
 
     let insert = diesel::insert_into(scores::table)
         .values(NewScore {
-            name: &sgr.game_result.player_name,
+            player_uuid: Uuid::parse_str(&sgr.game_result.player_uuid).unwrap(),
+            player_name: &sgr.game_result.player_name,
             score: sgr.game_result.score as i64,
         })
         .execute(&crate::establish_connection());

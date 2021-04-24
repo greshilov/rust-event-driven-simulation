@@ -1,0 +1,96 @@
+@font-face {
+  font-family: "Raleway";
+  src: url("../assets/fonts/Raleway-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Raleway";
+  src: url("../assets/fonts/Raleway-Bold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Raleway";
+  src: url("../assets/fonts/Raleway-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+}
+
+
+body {
+  font-size: 22px;
+  font-family: Raleway;
+  font-feature-settings: 'lnum' 1;
+  margin: 0;
+}
+
+h2 {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.small {
+  font-size: 18px;
+}
+
+@media only screen and (max-width: 768px) {
+  body {
+    font-size: 18px;
+  }
+
+  h2 {
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .small {
+    font-size: 14px;
+  }
+}
+
+.bg-gray {
+  background-color: $gray !important;
+}
+
+.bg-red {
+  background-color: $pred !important;
+}
+
+.bg-green {
+  background-color: $pgreen !important;
+}
+
+.bg-blue {
+  background-color: $pblue !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.grid {
+  display: grid;
+}
+
+.grid-start {
+  align-items: start;
+}
+
+.grid-center {
+  align-items: center;
+}
+
+.grid-end {
+  align-items: end;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+}
