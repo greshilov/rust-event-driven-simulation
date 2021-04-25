@@ -1,0 +1,35 @@
+FROM rust:1.51 as builder
+
+ARG SIMDIR=red-simulation
+ARG SRVDIR=red-server
+
+RUN rustup toolchain install nightly
+
+# Instal&cache cargo dependencies
+RUN cargo new --lib /app/$SIMDIR
+COPY ./$SIMDIR/Cargo.toml ./$SIMDIR/Cargo.lock /app/$SIMDIR/
+
+RUN cargo new --lib /app/$SRVDIR
+COPY ./$SRVDIR/diesel.toml ./$SRVDIR/Cargo.toml $SRVDIR/Cargo.lock /app/$SRVDIR/
+
+WORKDIR /app
+RUN (cd $SIMDIR && cargo fetch) \
+ && (cd $SRVDIR && cargo fetch) \
+ && rm -rf $SIMDIR/src && rm -rf $SRVDIR/src
+
+COPY ./$SIMDIR/ . /app/$SIMDIR/
+COPY ./$SRVDIR/ . /app/$SRVDIR/
+
+RUN cd $SRVDIR && cargo +nightly build --release --target-dir /build
+
+FROM debian:buster-slim
+WORKDIR /app
+
+RUN apt-get update \
+ && apt-get install -y libpq5 \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /build/release/red-server /app/
+
+EXPOSE 8000
+CMD ["./red-server"]

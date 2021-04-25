@@ -1,13 +1,10 @@
 version: "3.9"
    
 services:
-  db:
-    image: postgres:13
-    volumes:
-      - reds-postgres-data:/var/lib/postgresql/data
+  backend:
+    image: greshilov/red-server:latest
     env_file: .env
-    command: ["postgres", "-c", "log_statement=all"]
+    extra_hosts:
+        host.docker.internal: host-gateway
     ports:
-    - 5432:5432
-volumes:
-  reds-postgres-data:
+    - 8000:8000

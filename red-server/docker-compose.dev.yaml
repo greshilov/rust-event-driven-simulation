@@ -1,0 +1,16 @@
+version: "3.9"
+   
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - reds-postgres-data:/var/lib/postgresql/data
+    env:
+    - POSTGRES_DB=postgres
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    command: ["postgres", "-c", "log_statement=all"]
+    ports:
+    - 5432:5432
+volumes:
+  reds-postgres-data:
