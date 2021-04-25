@@ -43,11 +43,10 @@ export default class DividedSection extends Vue {
 
   .container {
     grid-template-columns: 1fr 1fr;
+    grid-gap: 40px;
 
     .left,
     .right {
-      padding: 40px 40px 40px;
-
       p {
         text-align: justify;
       }
@@ -62,13 +61,11 @@ export default class DividedSection extends Vue {
     .container {
       grid-template-columns: 1fr;
 
-      .left,
-      .right {
-        padding: 20px 20px 20px;
-      }
-
       .left {
         border-right: 0;
+      }
+      h2 {
+        text-align: center;
       }
     }
   }

@@ -97,11 +97,10 @@ export default class Init extends Vue {
     this.simWidth = this.$refs.smv.canvasWidth;
     this.simHeight = this.$refs.smv.canvasHeight;
 
-    this.particles = generateRandomParticles(
-      this.$refs.smv.canvasWidth,
-      this.$refs.smv.canvasHeight,
-      { density: 0.7 }
-    );
+    this.particles = generateRandomParticles(this.simWidth, this.simHeight, {
+      density: 0.87,
+      speedLimit: 50,
+    });
   }
 }
 </script>

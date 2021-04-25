@@ -25,6 +25,6 @@ pub fn establish_connection() -> PgConnection {
 fn main() {
     dotenv().ok();
     rocket::ignite()
-        .mount("/", routes![views::top_scores, views::submit_scores])
+        .mount("/reds", routes![views::top_scores, views::submit_scores])
         .launch();
 }

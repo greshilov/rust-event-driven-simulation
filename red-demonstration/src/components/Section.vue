@@ -25,7 +25,7 @@ export default class Section extends Vue {
 
 <style lang="scss">
 .simple-section {
-  padding: 80px 0;
+  padding: 40px 0;
 
   h2 {
     font-size: 34px;

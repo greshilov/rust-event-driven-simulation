@@ -41,6 +41,10 @@ import { IResult } from "@/interfaces.ts";
 
 import axios from "axios";
 
+const HOST = process.env.NODE_ENV === 'development'
+    ? 'http://localhost:8080'
+    : 'https://greshilov.me'
+
 @Options({
   components: {
     Leaderboard,
@@ -53,12 +57,12 @@ export default class Game extends Vue {
   results: IResult[] = [];
 
   async gameOver(result: SignedGameResult) {
-    await axios.post("/api/submit", result);
+    await axios.post(`${HOST}/reds/api/submit`, result);
     await this.refresh();
   }
 
   async refresh() {
-    const resp = await axios.get("/api/top");
+    const resp = await axios.get(`${HOST}/reds/api/top`);
     this.results = resp.data;
   }
 

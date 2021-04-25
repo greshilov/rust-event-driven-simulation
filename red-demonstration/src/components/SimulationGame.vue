@@ -208,8 +208,8 @@ export default class SimulationGame extends Vue {
     );
 
     const particles = generateRandomParticles(this.width, this.height, {
-      // density: 0.65,
-      density: 0.1,
+      density: 0.65,
+      speedLimit: 100,
     });
     for (const particle of particles) {
       this.sim.add_particle(particle);

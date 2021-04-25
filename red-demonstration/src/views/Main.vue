@@ -1,5 +1,4 @@
 <template>
-  <!--<SimulationGame :width="400" :height="400" />-->
   <GithubCorner />
   <Section class="text-center">
     <h2>Rust Event Driven Simulation*</h2>

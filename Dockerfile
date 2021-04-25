@@ -1,5 +1,5 @@
 # -- WASM Library --
-FROM rust:1.50 as builder
+FROM rust:1.51 as builder
 
 ARG SDIR=red-simulation
 
