@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3"
 
 services:
   backend:
@@ -9,3 +9,12 @@ services:
       host.docker.internal: host-gateway
     ports:
       - 8000:8000
+  postgres:
+    image: postgres:13
+    env_file: .env
+    volumes:
+      - reds-postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+volumes:
+  reds-postgres-data:

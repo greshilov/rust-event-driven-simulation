@@ -13,6 +13,17 @@ cp example.env .env
 
 ## Database maintenance
 
+### Initialization
+Install `diesel_cli` tool first
+```
+cargo install diesel_cli --no-default-features --features postgres
+```
+
+Setup database
+```
+diesel setup
+```
+
 ### Create migration
 ```
 diesel migration generate my_migration
