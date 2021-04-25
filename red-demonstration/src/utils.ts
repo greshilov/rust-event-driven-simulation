@@ -7,7 +7,6 @@ function getRandomArbitrary(min: number, max: number): number {
   return Math.random() * (max - min) + min;
 }
 
-import DATA from "../../red-simulation/data.json";
 import { IPlayer } from "./interfaces";
 
 export function getRandomColor(): RGBA {
@@ -17,22 +16,14 @@ export function getRandomColor(): RGBA {
   return RGBA.new(red, green, blue, 255);
 }
 
-export function fillWithRandomParticles(simulation: Simulation): void {
-  (DATA as any).forEach((item: any) => {
-    const { pos, v, m, r, color } = item;
+// import DATA from "../../red-simulation/data.json";
+// export function fillWithRandomParticles(simulation: Simulation): void {
+//   (DATA as any).forEach((item: any) => {
+//     const { pos, v, m, r, color } = item;
 
-    simulation.add_particle(Particle.new(pos.x, pos.y, v.x, v.y, m, r, color));
-  });
-
-  // for (let x = density * r; x < width - density * r; x += density * r) {
-  //   for (let y = density * r; y < height - density * r; y += density * r) {
-  //     const Ux = getRandomArbitrary(-speedLimit, speedLimit);
-  //     const Uy = getRandomArbitrary(-speedLimit, speedLimit);
-  //     const color = colorized ? getRandomColor() : undefined;
-  //     simulation.add_particle(Particle.new(x, y, Ux, Uy, 1, r, color));
-  //   }
-  // }
-}
+//     simulation.add_particle(Particle.new(pos.x, pos.y, v.x, v.y, m, r, color));
+//   });
+// }
 
 export function generateRandomParticles(
   width: number,

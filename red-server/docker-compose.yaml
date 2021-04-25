@@ -1,10 +1,11 @@
 version: "3.9"
-   
+
 services:
   backend:
     image: greshilov/red-server:latest
     env_file: .env
+    restart: always
     extra_hosts:
-        host.docker.internal: host-gateway
+      host.docker.internal: host-gateway
     ports:
-    - 8000:8000
+      - 8000:8000
