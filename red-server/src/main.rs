@@ -14,6 +14,7 @@ pub mod views;
 
 use diesel::prelude::*;
 use dotenv::dotenv;
+use rocket_cors::AllowedOrigins;
 use std::env;
 
 pub fn establish_connection() -> PgConnection {
@@ -24,7 +25,19 @@ pub fn establish_connection() -> PgConnection {
 
 fn main() {
     dotenv().ok();
+
+    let allowed_origins = AllowedOrigins::some(
+        &["https://www.greshilov.me"],
+        &["^https://(.+).greshilov.me$"],
+    );
+    let cors = rocket_cors::CorsOptions {
+        allowed_origins,
+        ..Default::default()
+    }
+    .to_cors()
+    .unwrap();
     rocket::ignite()
         .mount("/reds", routes![views::top_scores, views::submit_scores])
+        .attach(cors)
         .launch();
 }
