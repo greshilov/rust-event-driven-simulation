@@ -323,12 +323,6 @@ impl Simulation {
             .map_or(None, |gp| Some(gp.get_score(self.t)))
     }
 
-    pub fn set_ticks_per_sec(&mut self, ticks_per_sec: u32) {
-        self.ticks_per_sec = ticks_per_sec;
-        self.tick_time = 1. / ticks_per_sec as f64;
-        self.initialized = false;
-    }
-
     // This function has serious performance penalties.
     // Use it with caution.
     pub fn get_particles(&self) -> JsValue {
