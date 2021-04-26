@@ -327,10 +327,6 @@ canvas {
     &.enabled {
       z-index: 2;
       opacity: 0.8;
-
-      > * {
-        opacity: 1;
-      }
     }
   }
 
