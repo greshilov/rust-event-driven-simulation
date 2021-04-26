@@ -1,6 +1,7 @@
 # -- WASM Library --
 FROM rust:1.51 as builder
 
+ARG SECRET_KEY
 ARG SDIR=red-simulation
 
 # Installing wasm-pack
