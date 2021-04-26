@@ -27,13 +27,18 @@ RUN cd $SRVDIR && cargo +nightly build --release --target-dir /build
 
 FROM debian:buster-slim
 WORKDIR /app
+ARG SRVDIR=red-server
 
 RUN apt-get update \
  && apt-get install -y libpq5 \
  && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /build/release/red-server /app/
+# Add diesel from database maintenance
 COPY --from=builder /usr/local/cargo/bin/diesel /bin/
+COPY --from=builder /app/$SRVDIR/Cargo.toml /app/$SRVDIR/diesel.toml /app/
+COPY --from=builder /app/$SRVDIR/migrations /app/migrations
+# Server itself
+COPY --from=builder /build/release/red-server /app/
 
 EXPOSE 8000
 CMD ["./red-server"]

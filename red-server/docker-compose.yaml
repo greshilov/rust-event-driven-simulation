@@ -12,6 +12,7 @@ services:
   postgres:
     image: postgres:13
     env_file: .env
+    restart: always
     volumes:
       - reds-postgres-data:/var/lib/postgresql/data
     ports:
