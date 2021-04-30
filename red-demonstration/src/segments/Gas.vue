@@ -38,7 +38,7 @@
 import { Options, Vue } from "vue-class-component";
 import SimulationVue from "@/components/SimulationVue.vue";
 import DividedSection from "@/components/DividedSection.vue";
-import { Segment, Particle, RGBA, Simulation } from "red-simulation";
+import { Segment, Particle, Simulation } from "red-simulation";
 import { generateRandomParticles, len, roundTo } from "@/utils.ts";
 
 @Options({
@@ -64,25 +64,25 @@ export default class Gas extends Vue {
   particles: Particle[] = [];
   segments: Segment[] = [];
 
-  onPlay() {
+  onPlay(): void {
     this.calculatePseudoPressure();
     this.interval = setInterval(this.calculatePseudoPressure, 1000);
   }
 
-  onPause() {
+  onPause(): void {
     if (this.interval) {
       clearInterval(this.interval);
     }
   }
 
-  onStop() {
+  onStop(): void {
     this.pressure = {
       left: 0,
       right: 0,
     };
   }
 
-  init() {
+  init(): void {
     if (!this.$refs.sim) {
       return;
     }
@@ -111,7 +111,7 @@ export default class Gas extends Vue {
     ];
   }
 
-  calculatePseudoPressure() {
+  calculatePseudoPressure(): void {
     if (!this.$refs.sim && this.interval) {
       clearInterval(this.interval);
       return;
@@ -132,7 +132,7 @@ export default class Gas extends Vue {
     this.pressure.right = roundTo(rightSum / sum, 2);
   }
 
-  mounted() {
+  mounted(): void {
     this.init();
   }
 }

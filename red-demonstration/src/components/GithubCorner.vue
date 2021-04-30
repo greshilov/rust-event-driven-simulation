@@ -8,7 +8,7 @@
       height="80"
       viewBox="0 0 250 250"
       style="
-        fill: #151513;
+        fill: #333;
         color: #fff;
         position: absolute;
         top: 0;

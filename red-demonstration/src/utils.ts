@@ -1,4 +1,4 @@
-import { Simulation, Particle, RGBA, Vec2 } from "red-simulation";
+import { Particle, RGBA, Vec2 } from "red-simulation";
 import percentile from "percentile";
 
 import { IParticleGenerateOptions } from "@/interfaces.ts";

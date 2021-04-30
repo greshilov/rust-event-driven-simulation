@@ -118,21 +118,21 @@ impl Vec2 {
     }
 }
 
-/// Segment is a section between two points.
-/// Must always be imutable object, because `n`, `v`, `line`
-/// depend on `p1` and `p2` fields.
+// Segment is a section between two points.
+// Must always be imutable object, because `n`, `v`, `line`
+// attributes depend on `p1` and `p2` fields.
 #[wasm_bindgen]
 #[derive(Clone, Copy, Debug)]
 pub struct Segment {
-    /// First point of the segment
+    // First point of the segment
     pub p1: Vec2,
-    /// Second point of the segment
+    // Second point of the segment
     pub p2: Vec2,
-    /// Normal to segment (normalized one)
+    // Normal to segment (normalized one)
     pub n: Vec2,
-    /// Normalized vector that lies alongside the segment
+    // Normalized vector that lies alongside the segment
     pub v: Vec2,
-    /// Line correspoding to the segment
+    // Line correspoding to the segment
     pub line: Line,
 }
 

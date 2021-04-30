@@ -1,5 +1,4 @@
 <template>
-  <GithubCorner />
   <Section class="text-center">
     <h2>Rust Event Driven Simulation*</h2>
     <p>
@@ -31,26 +30,21 @@
   <Pool />
   <Gas />
   <Game />
-  <Footer />
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
-import GithubCorner from "@/components/GithubCorner.vue";
 import Section from "@/components/Section.vue";
 import Init from "@/segments/Init.vue";
 import Pool from "@/segments/Pool.vue";
 import Gas from "@/segments/Gas.vue";
 import DividedSection from "@/components/DividedSection.vue";
 import Game from "@/segments/Game.vue";
-import Footer from "@/components/Footer.vue";
 
 @Options({
   components: {
     DividedSection,
-    Footer,
     Game,
-    GithubCorner,
     Init,
     Pool,
     Gas,

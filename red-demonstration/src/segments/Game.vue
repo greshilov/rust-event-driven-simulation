@@ -62,12 +62,12 @@ export default class Game extends Vue {
     await this.refresh();
   }
 
-  async refresh() {
+  async refresh(): Promise<void> {
     const resp = await axios.get(`${HOST}/reds/api/top`);
     this.results = resp.data;
   }
 
-  async mounted() {
+  async mounted(): Promise<void> {
     await this.refresh();
   }
 }

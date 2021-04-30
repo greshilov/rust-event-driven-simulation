@@ -55,11 +55,7 @@ import {
 } from "red-simulation";
 import SButton from "@/components/SButton.vue";
 import { IPlayer } from "@/interfaces.ts";
-import {
-  FrameRater,
-  generateRandomParticles,
-  getPlayer,
-} from "@/utils.ts";
+import { FrameRater, generateRandomParticles, getPlayer } from "@/utils.ts";
 
 import { v4 } from "uuid";
 
@@ -117,18 +113,18 @@ export default class SimulationGame extends Vue {
   frameRater: FrameRater = new FrameRater();
   running = false;
 
-  start() {
+  start(): void {
     if (!this.running) {
       this.running = true;
       this.draw();
     }
   }
 
-  stop() {
+  stop(): void {
     this.running = false;
   }
 
-  draw() {
+  draw(): void {
     this.sim.draw(this.ctx);
     this.sim.tick();
     this.currentScore = this.sim.get_current_score() || 0;
@@ -138,7 +134,7 @@ export default class SimulationGame extends Vue {
     }
   }
 
-  click(event: any) {
+  click(event: any): void {
     if (!this.status || this.running) {
       return;
     }
@@ -154,7 +150,7 @@ export default class SimulationGame extends Vue {
     }
   }
 
-  mouseMove(event: any) {
+  mouseMove(event: any): void {
     if (!this.status) {
       return;
     }
@@ -165,7 +161,7 @@ export default class SimulationGame extends Vue {
     this.sim.mv_player_particle(x, y);
   }
 
-  submitName(event: any) {
+  submitName(event: any): void {
     if (
       (event.type == "keyup" && event.key === "Enter") ||
       event.type == "click"
@@ -176,14 +172,14 @@ export default class SimulationGame extends Vue {
     }
   }
 
-  async gameOver(result: SignedGameResult) {
+  async gameOver(result: SignedGameResult): Promise<void> {
     this.stop();
     this.gameScore = result.game_result.score;
     this.currentScore = result.game_result.score;
     this.$emit("gameOver", result);
   }
 
-  init() {
+  init(): void {
     this.ctx = this.$refs.canvas.getContext("2d")!;
     this.gameScore = null;
     this.currentScore = 0;
@@ -217,7 +213,7 @@ export default class SimulationGame extends Vue {
     this.sim.draw(this.ctx);
   }
 
-  getOrCreatePlayer() {
+  getOrCreatePlayer(): void {
     const player = getPlayer();
     if (player !== undefined) {
       this.player = player;
@@ -230,7 +226,7 @@ export default class SimulationGame extends Vue {
     }
   }
 
-  mounted() {
+  mounted(): void {
     this.getOrCreatePlayer();
     this.init();
   }
@@ -240,7 +236,7 @@ export default class SimulationGame extends Vue {
 <style lang="scss" scoped>
 canvas {
   background-color: white;
-  box-shadow: inset 0 0 1em #d2d0d069;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .canvas-buttons {

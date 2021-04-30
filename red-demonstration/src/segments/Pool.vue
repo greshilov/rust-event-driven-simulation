@@ -52,7 +52,7 @@ export default class Pool extends Vue {
 
   particles: Particle[] = [];
 
-  init() {
+  init(): void {
     const width = this.$refs.sim.canvasWidth;
     const height = this.$refs.sim.canvasHeight;
     const m = 1;
@@ -157,10 +157,8 @@ export default class Pool extends Vue {
     ];
   }
 
-  mounted() {
+  mounted(): void {
     this.init();
-    // setInterval(() => console.log(this.$refs.simulation?.getFrameRate()), 2000);
-    // setInterval(() => console.log(this.$refs.simulation?.frameRater.calculateFrameStats()), 4000)
   }
 }
 </script>

@@ -62,22 +62,22 @@ export default class Init extends Vue {
 
   particles: Particle[] = [];
 
-  onPlay() {
+  onPlay(): void {
     this.interval = setInterval(this.updateCollisionsCount, 1000);
   }
 
-  onPause() {
+  onPause(): void {
     if (this.interval) {
       clearInterval(this.interval);
     }
   }
 
-  onStop() {
+  onStop(): void {
     this.collisionCount = 0;
     this.frameRate = 0;
   }
 
-  updateCollisionsCount() {
+  updateCollisionsCount(): void {
     if (!this.$refs.smv) {
       return;
     }
@@ -93,7 +93,7 @@ export default class Init extends Vue {
     this.frameRate = this.$refs.smv?.getFrameRate();
   }
 
-  mounted() {
+  mounted(): void {
     this.simWidth = this.$refs.smv.canvasWidth;
     this.simHeight = this.$refs.smv.canvasHeight;
 

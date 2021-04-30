@@ -1,6 +1,6 @@
 <template>
-  <div ref="canvasHolder" class="canvas-holder">
-    <canvas ref="canvas"></canvas>
+  <div ref="canvasHolder" class="canvas-holder text-center">
+    <canvas class="box-shadow" ref="canvas"></canvas>
   </div>
   <div class="canvas-buttons">
     <p>
@@ -28,14 +28,22 @@ import { Simulation, Particle, DrawParams, Segment } from "red-simulation";
 import SButton from "@/components/SButton.vue";
 import { FrameRater } from "@/utils";
 
+const FPS = 60;
+
 @Options({
   components: { SButton },
   props: {
     width: Number,
     height: Number,
     autoplay: Boolean,
-    particles: Object as PropType<Particle[]>,
-    segments: Object as PropType<Segment[]>,
+    particles: {
+      type: Object as PropType<Particle[]>,
+      default: () => [],
+    },
+    segments: {
+      type: Object as PropType<Segment[]>,
+      default: () => [],
+    },
     drawParams: Object as PropType<DrawParams>,
   },
   watch: {
@@ -78,7 +86,7 @@ export default class SimulationVue extends Vue {
     return this.sim;
   }
 
-  play() {
+  play(): void {
     if (!this.running) {
       this.running = true;
       this.$emit("onPlay");
@@ -86,12 +94,12 @@ export default class SimulationVue extends Vue {
     }
   }
 
-  pause() {
+  pause(): void {
     this.$emit("onPause");
     this.running = false;
   }
 
-  stop() {
+  stop(): void {
     this.$emit("onStop");
     this.init();
   }
@@ -100,7 +108,7 @@ export default class SimulationVue extends Vue {
     return this.frameRater.calculateFrameRate() || 0;
   }
 
-  draw() {
+  draw(): void {
     this.sim.draw(this.ctx);
 
     this.frameRater.startFrame();
@@ -112,13 +120,13 @@ export default class SimulationVue extends Vue {
     }
   }
 
-  init() {
+  init(): void {
     this.$refs.canvas.width = this.canvasWidth;
     this.$refs.canvas.height = this.canvasHeight;
     this.sim = Simulation.new(
       this.canvasWidth,
       this.canvasHeight,
-      60,
+      FPS,
       this.drawParams
     );
     for (const particle of this.particles) {
@@ -132,7 +140,7 @@ export default class SimulationVue extends Vue {
     this.sim.draw(this.ctx);
   }
 
-  mounted() {
+  mounted(): void {
     this.ctx = this.$refs.canvas.getContext("2d")!;
     this.init();
     if (this.autoplay) {
@@ -145,7 +153,6 @@ export default class SimulationVue extends Vue {
 <style lang="scss" scoped>
 canvas {
   background-color: white;
-  box-shadow: inset 0 0 1em #d2d0d069;
 }
 .canvas-holder {
   min-height: 400px;

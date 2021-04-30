@@ -1,22 +1,23 @@
 <template>
   <main>
+    <GithubCorner />
+    <Header />
     <router-view />
+    <Footer />
   </main>
 </template>
 
 <script lang="ts">
 import "@/scss/base.scss";
-import { defineComponent } from "vue";
 
-import routes from "@/router";
+import { Options, Vue } from "vue-class-component";
 
-export default defineComponent({
-  name: "App",
-  components: {},
-  computed: {
-    routesList: () => {
-      return routes.getRoutes();
-    },
-  },
-});
+import GithubCorner from "@/components/GithubCorner.vue";
+import Footer from "@/components/Footer.vue";
+import Header from "@/components/Header.vue";
+
+@Options({
+  components: { Footer, GithubCorner, Header },
+})
+export default class App extends Vue {}
 </script>
