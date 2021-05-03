@@ -1,5 +1,7 @@
 ## rust-event-driven-simulation
 
+A wasm-library to simulate 2D-particle collision systems.
+
 ## Build instructions
 * Install [wasm pack](https://rustwasm.github.io/wasm-pack/installer/).
 * Build project using following command.

@@ -16,18 +16,10 @@ Built using `wasm-pack` tools into `.wasm` module. All core functionality can be
 Vue3 application with `red-simulation` wasm library as a dependency. Created with demonstration purposes.
 
 ## red-server
-A small web server that's written on rust using `rocket` and `diesel`. Created to store game results from Vue3 application.  
+A small web server that's written on rust using `rocket` and `diesel`. Created to store game results from Vue3 application. 
 
 
 The project is heavily inspired by the task from Princeton algorithm course (II part). Check it out [here](https://algs4.cs.princeton.edu/61event/). It contains a lot of useful information and good references to scientific papers about this topic.
 
 ## How to build
-See detailed instructions in child directories.  
-
-## Usage
-Build app using previous section.
-```
-cd red-demonstration && npm run serve
-cd red-server && cargo run
-```
-Voila :) Check out http://localhost:8080
+See detailed instructions in child directories. Better yet you can find ready-to-go example in `example` subdirectory.
