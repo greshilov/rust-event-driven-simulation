@@ -60,6 +60,7 @@ export default class Pool extends Vue {
     const vertGap = 1.2 * r;
     const horGap = Math.sqrt(3) * (1.2 * r);
 
+    // Cue ball
     this.particles = [
       Particle.new(
         width / 4,
@@ -70,91 +71,26 @@ export default class Pool extends Vue {
         r,
         RGBA.new(255, 255, 255)
       ),
-      Particle.new(width / 2, height / 2, 0, 0, m, r, RGBA.new(240, 255, 0)),
-      Particle.new(
-        width / 2 + horGap,
-        height / 2 + vertGap,
-        0,
-        0,
-        m,
-        r,
-        RGBA.new(249, 105, 14)
-      ),
-      Particle.new(
-        width / 2 + horGap,
-        height / 2 - vertGap,
-        0,
-        0,
-        m,
-        r,
-        RGBA.new(0, 0, 255)
-      ),
-
-      Particle.new(
-        width / 2 + 2 * horGap,
-        height / 2,
-        0,
-        0,
-        m,
-        r,
-        RGBA.new(255, 0, 0)
-      ),
-      Particle.new(
-        width / 2 + 2 * horGap,
-        height / 2 + 2 * vertGap,
-        0,
-        0,
-        m,
-        r,
-        RGBA.new(30, 130, 76)
-      ),
-      Particle.new(
-        width / 2 + 2 * horGap,
-        height / 2 - 2 * vertGap,
-        0,
-        0,
-        m,
-        r,
-        RGBA.new(0, 0, 0)
-      ),
-
-      Particle.new(
-        width / 2 + 3 * horGap,
-        height / 2 + vertGap,
-        0,
-        0,
-        m,
-        r,
-        RGBA.new(154, 18, 179)
-      ),
-      Particle.new(
-        width / 2 + 3 * horGap,
-        height / 2 + 3 * vertGap,
-        0,
-        0,
-        m,
-        r,
-        RGBA.new(137, 196, 244)
-      ),
-      Particle.new(
-        width / 2 + 3 * horGap,
-        height / 2 - vertGap,
-        0,
-        0,
-        m,
-        r,
-        RGBA.new(250, 216, 89)
-      ),
-      Particle.new(
-        width / 2 + 3 * horGap,
-        height / 2 - 3 * vertGap,
-        0,
-        0,
-        m,
-        r,
-        RGBA.new(0, 255, 0)
-      ),
     ];
+
+    const poolTriangle: [number, number, string][] = [
+      [width / 2, height / 2, "F0FA00"],
+      [width / 2 + horGap, height / 2 + vertGap, "F9690E"],
+      [width / 2 + horGap, height / 2 - vertGap, "0000FF"],
+      [width / 2 + 2 * horGap, height / 2, "FF0000"],
+      [width / 2 + 2 * horGap, height / 2 + 2 * vertGap, "1E824C"],
+      [width / 2 + 2 * horGap, height / 2 - 2 * vertGap, "000000"],
+      [width / 2 + 3 * horGap, height / 2 + vertGap, "9A12B3"],
+      [width / 2 + 3 * horGap, height / 2 + 3 * vertGap, "89C4F4"],
+      [width / 2 + 3 * horGap, height / 2 - vertGap, "FAD859"],
+      [width / 2 + 3 * horGap, height / 2 - 3 * vertGap, "00FF00"],
+    ];
+
+    for (const [x, y, color] of poolTriangle) {
+      this.particles.push(
+        Particle.new(x, y, 0, 0, m, r, RGBA.from_css_hex(color))
+      );
+    }
   }
 
   mounted(): void {

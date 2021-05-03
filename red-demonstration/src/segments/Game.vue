@@ -5,7 +5,8 @@
       Even though game engines usually don't use this approach directly to
       simulate physics, event-driven is still widely adopted in game
       development. For example, it can be used to implement communication
-      mechanisms between different parts of the game engine.
+      mechanisms between different parts of the game engine. Nevertheless, I've
+      built my own game with <s>blackjack and hookers</s> particles and collisions.
     </p>
     <p>
       The rules of the game are simple. Use your mouse to control the red
@@ -44,7 +45,7 @@ import axios from "axios";
 const HOST =
   process.env.NODE_ENV === "development"
     ? "http://localhost:8080"
-    : "https://greshilov.me";
+    : "https://b.greshilov.me";
 
 @Options({
   components: {

@@ -23,7 +23,7 @@ const debounce = (fn: (...args: any[]) => any, ms = 300) => {
       type: Number,
       default: 1000,
     },
-    value: String,
+    initialValue: String,
     divClass: {
       type: String,
       default: "",
@@ -38,7 +38,7 @@ export default class JsonTextarea extends Vue {
   };
 
   debounceTime!: number;
-  value!: string;
+  initialValue!: string;
   editor!: EditorView;
 
   mounted(): void {
@@ -48,7 +48,7 @@ export default class JsonTextarea extends Vue {
 
     this.editor = new EditorView({
       state: EditorState.create({
-        doc: this.value,
+        doc: this.initialValue,
         extensions: [
           basicSetup,
           json(),
@@ -62,11 +62,15 @@ export default class JsonTextarea extends Vue {
       parent: this.$refs.editorEl,
     });
   }
+
+  beforeUnmount(): void {
+    this.editor.destroy(); 
+  }
 }
 </script>
 <style lang="scss" scoped>
 .editor {
   text-align: auto;
-  font-size: 16px;
+  font-size: 15px;
 }
 </style>

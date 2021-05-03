@@ -4,11 +4,11 @@
     <p>
       Event-driven programming is a widely spread technique used in many areas,
       from web servers to physical simulations. This project aims to implement a
-      relatively <b>simple 2D particle collision system</b>. That's it, we have
-      several obstacles, and a bunch of moving particles confined in some closed
-      domain. Particles can have different radiuses and masses. Obstacles and
-      domain consist of straight-line segments. All collisions considered being
-      perfectly inelastic.
+      relatively <b>simple 2D particle collision system</b> using it. That's it,
+      we have several obstacles, and a bunch of moving particles confined in
+      some closed domain. Particles can have different radiuses and masses.
+      Obstacles and domain consist of straight-line segments. All collisions
+      considered being perfectly inelastic.
     </p>
     <p>
       As you may have guessed the primary language for this project is rust. But

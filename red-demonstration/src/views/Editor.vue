@@ -16,10 +16,16 @@
   <DividedSection class="section-editor" align="center">
     <template v-slot:left>
       <JsonEditor
-        :value="initialValue"
+        :key="editorKey"
+        :initialValue="initialValue"
         :divClass="getEditorClass()"
         @onChange="onChange"
       />
+      <div class="button-holder text-center">
+        <SButton class="bg-blue" @click="reset"
+          >Reset to default <font-awesome-icon icon="sync"
+        /></SButton>
+      </div>
     </template>
     <template v-slot:right>
       <SimulationVue
@@ -36,6 +42,7 @@
 import { Options, Vue } from "vue-class-component";
 import GithubCorner from "@/components/GithubCorner.vue";
 import Section from "@/components/Section.vue";
+import SButton from "@/components/SButton.vue";
 import DividedSection from "@/components/DividedSection.vue";
 
 import SimulationVue from "@/components/SimulationVue.vue";
@@ -48,6 +55,7 @@ import { Particle, RGBA, Segment } from "red-simulation";
     GithubCorner,
     JsonEditor,
     Section,
+    SButton,
     DividedSection,
     SimulationVue,
   },
@@ -58,36 +66,9 @@ export default class Editor extends Vue {
   particles: Particle[] = [];
   segments: Segment[] = [];
   state = State.Ok;
+  editorKey = 1;
 
-  initialValue = `{
-  "width": 400,
-  "height": 400,
-  "particles": [
-    {
-      "pos": [300, 75],
-      "v": [-100, 100],
-      "m": 1,
-      "r": 10,
-      "color": "ff0000"
-    },
-    {
-      "pos": [100, 335],
-      "v": [100, -100],
-      "m": 2,
-      "r": 20
-    }
-  ],
-  "segments": [
-    {
-      "p1": [200, 125],
-      "p2": [400, 125]
-    },
-    {
-      "p1": [0, 275],
-      "p2": [100, 275]
-    }
-  ]
-}`;
+  initialValue = localStorage.editorSystem || DEFAULT_SYSTEM;
 
   getEditorClass(): string {
     switch (this.state) {
@@ -152,11 +133,19 @@ export default class Editor extends Vue {
 
   onChange(value: string): void {
     try {
+      localStorage.editorSystem = value;
       JSON.parse(value);
       this.load(value);
     } catch (e) {
       this.state = State.Error;
     }
+  }
+
+  reset(): void {
+    delete localStorage.editorSystem;
+    this.load(DEFAULT_SYSTEM);
+    // I hate javascript
+    this.editorKey = +!this.editorKey;
   }
 
   mounted(): void {
@@ -210,10 +199,44 @@ enum State {
   Warning,
   Error,
 }
+
+const DEFAULT_SYSTEM = `{
+  "width": 400,
+  "height": 400,
+  "particles": [
+    {
+      "pos": [300, 75],
+      "v": [-100, 100],
+      "m": 1,
+      "r": 10,
+      "color": "ff0000"
+    },
+    {
+      "pos": [100, 335],
+      "v": [100, -100],
+      "m": 2,
+      "r": 20
+    }
+  ],
+  "segments": [
+    {
+      "p1": [200, 125],
+      "p2": [400, 125]
+    },
+    {
+      "p1": [0, 275],
+      "p2": [100, 275]
+    }
+  ]
+}`;
 </script>
 <style lang="scss">
 .section-editor {
   padding-top: 0;
+
+  .button-holder {
+    margin-top: 20px;
+  }
 }
 
 span.b-yellow {
@@ -222,6 +245,10 @@ span.b-yellow {
 
 span.b-red {
   background-color: $lred;
+}
+
+.cm-editor {
+  max-height: 670px;
 }
 
 .editor {

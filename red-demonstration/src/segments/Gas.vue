@@ -7,10 +7,14 @@
         gas is represented as a large number of identical submicroscopic
         particles. All macroscopic properties such as pressure or temperature
         are defined by particle interactions. This particular example represents
-        <b>diffusion</b> process. The domain is divided into two sides. The left
-        side of the domain contains a lot of particles, and the right side has
-        only a few of them. There is a small gate in the center between the
-        sides.
+        <b
+          ><a target="_blank" href="https://en.wikipedia.org/wiki/Diffusion"
+            >diffusion</a
+          ></b
+        >
+        process. The domain is divided into two sides. The left side of the
+        domain contains a lot of particles, and the right side has only a few of
+        them. Two domains connected via a small gate in the center.
       </p>
       <p>
         After one starts the simulation, the presence of the particles in the
