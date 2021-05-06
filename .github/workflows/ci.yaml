@@ -1,0 +1,84 @@
+name: 'CI'
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  red-simulation_demonstration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+
+      - name: red-simulation
+        working-directory: red-simulation
+        # TODO: cargo clippy -- -Dwarnings
+        run: cargo fmt -- --check && cargo test
+
+      - name: Install wasm-pack
+        uses: jetli/wasm-pack-action@v0.3.0
+        with:
+          version: 'latest'
+
+      - name: Build
+        working-directory: red-simulation
+        run: wasm-pack build
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: red-demonstration
+        working-directory: red-demonstration
+        run: |
+          npm ci
+          npm run lint
+          npm run build
+
+  red-server:
+    needs: red-simulation_demonstration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          components: rustfmt, clippy
+
+      - name: Test
+        working-directory: red-server
+        # TODO: cargo clippy -- -Dwarnings
+        run: cargo fmt -- --check && cargo test
+
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install & build
+        working-directory: example
+        run: |
+          npm ci
+          npm run build
