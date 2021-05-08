@@ -6,7 +6,6 @@ This example uses `red-simulation` npm package, so you don't need to build the l
 
 ```
 npm ci
-npm run build
 npm run start
 ```
 
