@@ -303,7 +303,7 @@ impl Line {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::utils::compare_floats;
+    use crate::compare_floats;
 
     #[test]
     fn test_add() {
@@ -377,7 +377,7 @@ mod tests {
         let a = Vec2 { x: 1.0, y: 2.0 };
 
         assert_eq!(a * a.norm(), 0.);
-        compare_floats(a.norm().len(), 1.);
+        compare_floats!(a.norm().len(), 1.);
     }
 
     #[test]

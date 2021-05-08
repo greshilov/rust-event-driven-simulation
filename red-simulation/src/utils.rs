@@ -23,17 +23,24 @@ macro_rules! log {
     }
 }
 
-pub const EPS: f64 = 1e-12;
+pub const EPS: f64 = 1e-10;
+
+#[macro_export]
+macro_rules! compare_floats {
+    ($a:expr, $b:expr $(,)?) => {
+        assert!(($a - $b).abs() < crate::utils::EPS, "{:?} != {:?}", $a, $b,)
+    };
+}
 
 #[macro_export]
 macro_rules! compare_vec2 {
     ($a:expr, $b:expr, $msg:tt $(,)?) => {
         assert!(
-            ($a - $b).len_sqr().abs() < crate::utils::EPS,
+            ($a.x - $b.x).abs() < crate::utils::EPS && ($a.y - $b.y).abs() < crate::utils::EPS,
             "{:?} {:?} != {:?}",
             $msg,
             $a,
-            $b
+            $b,
         )
     };
 }
