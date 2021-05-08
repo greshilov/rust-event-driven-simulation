@@ -146,7 +146,7 @@ impl Segment {
 impl Segment {
     pub fn from_points(p1: Vec2, p2: Vec2) -> Segment {
         let v = (p2 - p1).normalize();
-        // This is normalized normal, lol.
+        // It's a normalized normal, lol.
         let n = v.norm();
         let line = Line::from_two_points(&p1, &p2);
 
@@ -186,10 +186,13 @@ impl Segment {
 
 #[derive(Clone, Copy, Debug)]
 pub struct Circle {
+    // Center of the circle
     pub p: Vec2,
+    // Its radius
     pub r: f64,
 }
 
+// Represents the general form of a line equation
 #[wasm_bindgen]
 #[derive(Clone, Copy, Debug)]
 pub struct Line {
@@ -198,6 +201,7 @@ pub struct Line {
     pub c: f64,
 }
 
+// Intersection between Line and Circle
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum LCIntersection {
     None,

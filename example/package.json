@@ -23,6 +23,6 @@
     "webpack-dev-server": "^3.1.5"
   },
   "dependencies": {
-    "red-simulation": "^0.1.1"
+    "red-simulation": "^0.1.2"
   }
 }

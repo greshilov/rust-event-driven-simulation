@@ -1,7 +1,9 @@
 ## Minimal example
 
+This example uses `red-simulation` npm package, so you don't need to build the library itself to try it.
 
-### How to
+### How to run
+
 ```
 npm ci
 npm run build

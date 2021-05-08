@@ -116,17 +116,6 @@ impl RGBA {
 mod tests {
     use super::*;
 
-    fn particle(pos: Vec2, v: Vec2, m: f64, r: f64) -> Particle {
-        Particle {
-            pos,
-            v,
-            m,
-            r,
-            collisions_count: 0,
-            color: None,
-        }
-    }
-
     #[test]
     fn test_rgba() {
         let rgba = RGBA {
