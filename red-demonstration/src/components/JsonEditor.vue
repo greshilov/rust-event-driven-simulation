@@ -64,7 +64,7 @@ export default class JsonTextarea extends Vue {
   }
 
   beforeUnmount(): void {
-    this.editor.destroy(); 
+    this.editor.destroy();
   }
 }
 </script>

@@ -1,7 +1,9 @@
 <template>
   <footer>
     <div class="container">
-      <div class="text-center">Footer</div>
+      <div class="text-center">
+        Footer is absolutely useless here. It just exists.
+      </div>
     </div>
   </footer>
 </template>

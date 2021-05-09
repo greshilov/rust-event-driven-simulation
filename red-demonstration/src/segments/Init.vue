@@ -13,7 +13,9 @@
         according to the laws of elastic collision using event-driven
         simulation. Domain has size {{ simWidth }} x {{ simHeight }} px. Total
         number of collisions happend so far <b>{{ collisionCount }}</b
-        >. <br />
+        >.
+      </p>
+      <p>
         Your frame rate is <b>{{ frameRate }}</b> fps.
       </p>
     </template>

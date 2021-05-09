@@ -6,7 +6,8 @@
       simulate physics, event-driven is still widely adopted in game
       development. For example, it can be used to implement communication
       mechanisms between different parts of the game engine. Nevertheless, I've
-      built my own game with <s>blackjack and hookers</s> particles and collisions.
+      built my own game with <s>blackjack and hookers</s> particles and
+      collisions.
     </p>
     <p>
       The rules of the game are simple. Use your mouse to control the red
@@ -14,6 +15,12 @@
       collisions with other particles and walls of the domain as long as you
       can. The score of the game is just a number of deciseconds passed since
       the start.
+    </p>
+    <p>
+      By the way it doesn't work well on mobile devices. Use mouse for the
+      better game experience.
+    </p>
+    <p>
       <b
         >Click on the red particle
         <font-awesome-icon icon="circle" style="color: red"
