@@ -17,8 +17,8 @@
           >John Dalton</a
         >
         introduced his atomic theory of matter. He suggested that matter
-        consists of small indestructible elements - atoms. And yeah, he actually
-        thought that atoms look like billiard balls :)
+        consists of small indestructible elements - atoms. And atoms were
+        described as they were like billiard balls.
       </p>
       <p>
         I personally love this name, because it figuratively represents the

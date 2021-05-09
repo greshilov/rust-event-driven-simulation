@@ -3,18 +3,21 @@
     <template v-slot:left>
       <h2>Two dimensional gas</h2>
       <p>
-        This model also plays a central role in the kinetic theory of gases. A
-        gas is represented as a large number of identical submicroscopic
-        particles. All macroscopic properties such as pressure or temperature
-        are defined by particle interactions. This particular example represents
+        Models like this also play a central role in the kinetic theory of
+        gases. A gas is represented as a large number of identical
+        submicroscopic particles. All macroscopic properties such as pressure or
+        temperature are defined by particle interactions. This particular
+        example represents
         <b
           ><a target="_blank" href="https://en.wikipedia.org/wiki/Diffusion"
-            >diffusion</a
+            >a diffusion</a
           ></b
         >
         process. The domain is divided into two sides. The left side of the
-        domain contains a lot of particles, and the right side has only a few of
-        them. Two domains connected via a small gate in the center.
+        domain contains a lot of particles, which represents gas with the high
+        pressure. And the right side contains few particles, representing a gas
+        with the low pressure. Two domains connected via a small gate in the
+        center. It allows particles to travel between the two sides.
       </p>
       <p>
         After one starts the simulation, the presence of the particles in the
