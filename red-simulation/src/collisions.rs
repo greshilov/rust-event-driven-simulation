@@ -238,9 +238,9 @@ impl Eq for CollisionPair {}
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::compare_floats;
     use crate::geom::{Segment, Vec2};
     use crate::particle::Particle;
-    use crate::utils::compare_floats;
 
     fn particle(pos: Vec2, v: Vec2, m: f64, r: f64) -> Particle {
         Particle {
@@ -265,7 +265,7 @@ mod tests {
 
         let p_2 = particle(pos_2, v_2, 1.0, 0.2);
 
-        compare_floats(pvp::time_to_hit(&p_1, &p_2).unwrap(), 1.3);
+        compare_floats!(pvp::time_to_hit(&p_1, &p_2).unwrap(), 1.3);
     }
 
     #[test]
@@ -281,7 +281,7 @@ mod tests {
         // Basically vertical line from (3, 0) to (3, 3)
         let seg = Segment::from_points(seg_1, seg_2);
 
-        compare_floats(pvs::time_to_hit(&p_1, &seg).unwrap(), 1.4);
+        compare_floats!(pvs::time_to_hit(&p_1, &seg).unwrap(), 1.4);
     }
 
     #[test]
@@ -296,7 +296,7 @@ mod tests {
 
         let seg = Segment::from_points(seg_1, seg_2);
 
-        compare_floats(pvs::time_to_hit(&p_1, &seg).unwrap(), 3.5);
+        compare_floats!(pvs::time_to_hit(&p_1, &seg).unwrap(), 3.5);
     }
 
     #[test]
@@ -311,7 +311,7 @@ mod tests {
 
         let seg = Segment::from_points(seg_1, seg_2);
 
-        compare_floats(pvs::time_to_hit(&p_1, &seg).unwrap(), 1.6);
+        compare_floats!(pvs::time_to_hit(&p_1, &seg).unwrap(), 1.6);
     }
 
     #[test]
@@ -326,7 +326,7 @@ mod tests {
 
         let seg = Segment::from_points(seg_1, seg_2);
 
-        compare_floats(pvs::time_to_hit(&p_1, &seg).unwrap(), 2.43380962103094);
+        compare_floats!(pvs::time_to_hit(&p_1, &seg).unwrap(), 2.43380962103094);
     }
 
     #[test]
@@ -343,8 +343,8 @@ mod tests {
 
         let (pn_1, pn_2) = pvp::collision(&p_1, &p_2);
 
-        compare_floats(pn_1.v.x, -1.0);
-        compare_floats(pn_2.v.x, 1.0);
+        compare_floats!(pn_1.v.x, -1.0);
+        compare_floats!(pn_2.v.x, 1.0);
     }
 
     #[test]
@@ -365,6 +365,6 @@ mod tests {
         let p_new = pvs::collision(&p_1, &seg);
 
         // Summary speed must not change
-        compare_floats(p_new.v.len(), p_1.v.len());
+        compare_floats!(p_new.v.len(), p_1.v.len());
     }
 }

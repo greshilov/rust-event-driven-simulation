@@ -23,10 +23,26 @@ macro_rules! log {
     }
 }
 
-#[allow(dead_code)]
-pub fn compare_floats(a: f64, b: f64) {
-    const EPS: f64 = 1e-12;
-    assert!((a - b).abs() < EPS, "{} != {}", a, b);
+pub const EPS: f64 = 1e-10;
+
+#[macro_export]
+macro_rules! compare_floats {
+    ($a:expr, $b:expr $(,)?) => {
+        assert!(($a - $b).abs() < crate::utils::EPS, "{:?} != {:?}", $a, $b,)
+    };
+}
+
+#[macro_export]
+macro_rules! compare_vec2 {
+    ($a:expr, $b:expr, $msg:tt $(,)?) => {
+        assert!(
+            ($a.x - $b.x).abs() < crate::utils::EPS && ($a.y - $b.y).abs() < crate::utils::EPS,
+            "{:?} {:?} != {:?}",
+            $msg,
+            $a,
+            $b,
+        )
+    };
 }
 
 pub type HmacSha256 = Hmac<Sha256>;
