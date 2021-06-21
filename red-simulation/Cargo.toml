@@ -41,7 +41,7 @@ features = [
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.13"
-rand = "0.8.3"
+rand = "0.8.4"
 
 [profile.release]
 opt-level = "s"
