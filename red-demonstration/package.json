@@ -15,7 +15,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.0-3",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.0-beta3",
-    "core-js": "^3.6.5",
+    "core-js": "^3.15.0",
     "percentile": "^1.4.0",
     "red-simulation": "file:../red-simulation/pkg",
     "timeago.js": "^4.0.2",
