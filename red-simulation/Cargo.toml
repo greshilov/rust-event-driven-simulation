@@ -28,7 +28,7 @@ wee_alloc = { version = "0.4.5", optional = true }
 js-sys = "0.3.48"
 hmac = "0.10.1"
 sha2 = "0.9.3"
-serde_json = "1.0.64"
+serde_json = "1.0.66"
 serde = { version = "1.0.125", features = ["derive"] }
 
 [dependencies.web-sys]
@@ -40,7 +40,7 @@ features = [
 ]
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.13"
+wasm-bindgen-test = "0.3.26"
 rand = "0.8.4"
 
 [profile.release]
