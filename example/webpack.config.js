@@ -2,16 +2,26 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const path = require('path');
 
 module.exports = {
-  entry: "./src/bootstrap.js",
+  entry: [
+    "./src/bootstrap.js",
+  ],
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
   },
   mode: "development",
   devServer: {
-    contentBase: './dist'
+    static: {
+      directory: path.resolve(__dirname, "dist"),
+      watch: true,
+    },
   },
   plugins: [
-    new CopyWebpackPlugin(['public/index.html'])
+    new CopyWebpackPlugin({
+      patterns: ['public/index.html'],
+    })
   ],
+  experiments: {
+    syncWebAssembly: true,
+  },
 };
