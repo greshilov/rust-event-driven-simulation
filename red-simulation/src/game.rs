@@ -77,7 +77,7 @@ pub struct SignedGameResult {
 impl GameResult {
     pub fn hmac(&self, secret: &[u8]) -> HmacSha256 {
         let mut mac =
-            HmacSha256::new_varkey(&secret).expect("Invalid secret, unable to build hmac.");
+            HmacSha256::new_from_slice(&secret).expect("Invalid secret, unable to build hmac.");
         mac.update(&self.player_name.as_bytes());
         mac.update(&self.player_uuid.as_bytes());
         mac.update(&self.score.to_be_bytes());
