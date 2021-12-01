@@ -2,6 +2,11 @@
 
 A wasm-library to simulate 2D-particle collision systems.
 
+## Installation
+```
+npm i red-simulation
+```
+
 ## Build instructions
 * Install [wasm pack](https://rustwasm.github.io/wasm-pack/installer/).
 * Build project using following command.
