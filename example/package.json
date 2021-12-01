@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "start": "webpack-dev-server --start"
+    "start": "webpack serve"
   },
   "keywords": [
     "webassembly",
@@ -17,12 +17,12 @@
   "license": "MIT",
   "homepage": "https://reds.greshilov.me",
   "devDependencies": {
-    "copy-webpack-plugin": "^5.0.0",
-    "webpack": "^4.29.3",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.5"
+    "copy-webpack-plugin": "^10.0.0",
+    "webpack": "^5.64.0",
+    "webpack-cli": "^4.9.0",
+    "webpack-dev-server": "^4.6.0"
   },
   "dependencies": {
-    "red-simulation": "^0.1.2"
+    "red-simulation": "^0.1.3"
   }
 }
