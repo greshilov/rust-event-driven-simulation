@@ -1,4 +1,4 @@
-FROM rust:slim-buster as builder
+FROM rust:1.56-slim-buster as builder
 
 ARG SIMDIR=red-simulation
 ARG SRVDIR=red-server
