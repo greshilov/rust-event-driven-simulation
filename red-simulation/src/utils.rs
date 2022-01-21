@@ -1,8 +1,5 @@
 use wasm_bindgen::prelude::*;
 
-use hmac::Hmac;
-use sha2::Sha256;
-
 #[wasm_bindgen]
 #[allow(dead_code)]
 pub fn set_panic_hook() {
@@ -44,5 +41,3 @@ macro_rules! compare_vec2 {
         )
     };
 }
-
-pub type HmacSha256 = Hmac<Sha256>;

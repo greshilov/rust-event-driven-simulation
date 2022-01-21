@@ -1,8 +1,10 @@
-use hmac::{Mac, NewMac};
+use hmac::{Hmac, Mac};
+use sha2::Sha256;
+
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
-use super::utils::HmacSha256;
+pub type HmacSha256 = Hmac<Sha256>;
 
 pub struct GameParams {
     // Player's particle index
@@ -101,6 +103,6 @@ impl SignedGameResult {
 
     pub fn verify(&self, secret: &[u8]) -> bool {
         let mac = self.game_result.hmac(secret);
-        mac.verify(&self.hex_digest).is_ok()
+        mac.verify_slice(&self.hex_digest).is_ok()
     }
 }
