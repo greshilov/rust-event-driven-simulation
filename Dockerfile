@@ -1,5 +1,5 @@
 # -- WASM Library --
-FROM rust:1.51 as builder
+FROM rust:1.58 as builder
 
 ARG SECRET_KEY
 ARG SDIR=red-simulation
@@ -19,7 +19,7 @@ COPY ./$SDIR/ .
 RUN wasm-pack build --release
 
 # -- Frontend --
-FROM node:15
+FROM node:16
 
 ARG DDIR=red-demonstration
 ARG SDIR=red-simulation
