@@ -8,8 +8,8 @@
       <h2>Billiard ball</h2>
       <p>
         One of the obvious applications for this model is a pool game
-        simulation. Interestingly enough <b>billiard ball model</b> is the legit
-        name!
+        simulation. Interestingly enough <b>the billiard ball model</b> is the
+        legit name!
       </p>
       <p>
         It brings us back to the 19th century when

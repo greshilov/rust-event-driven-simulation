@@ -3,7 +3,7 @@
     <template v-slot:left>
       <h2>Simulate the motion of N colliding particles</h2>
       <p>
-        Enough talking let's check out the simulation itself. Use
+        Enough talking, let's check out the simulation itself. Use
         <font-awesome-icon icon="play" /> to play,
         <font-awesome-icon icon="pause" /> to pause, and
         <font-awesome-icon icon="sync" /> to reload the simulation.
@@ -11,8 +11,8 @@
       <p>
         Here we have {{ particles.length }} colliding particles simulated
         according to the laws of elastic collision using event-driven
-        simulation. Domain has size {{ simWidth }} x {{ simHeight }} px. Total
-        number of collisions happend so far <b>{{ collisionCount }}</b
+        simulation. The domain has size {{ simWidth }} x {{ simHeight }} px.
+        Total number of collisions happend so far <b>{{ collisionCount }}</b
         >.
       </p>
       <p>
