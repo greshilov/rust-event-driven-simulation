@@ -3,11 +3,11 @@
     <h2>Rust Event Driven Simulation*</h2>
     <p>
       Event-driven programming is a widely spread technique used in many areas,
-      from web servers to physical simulations. This project aims to implement a
-      relatively <b>simple 2D particle collision system</b> using it. That's it,
-      we have several obstacles, and a bunch of moving particles confined in
-      some closed domain. Particles can have different radiuses and masses.
-      Obstacles and domain consist of straight-line segments. To calculate
+      from web servers to physical simulations. This project aims to use it to
+      implement a relatively <b>simple 2D particle collision system</b>. That’s
+      it. We have several obstacles and a bunch of moving particles confined in
+      a closed domain. Particles can have different radiuses and masses.
+      Obstacles and domain consist of straight-line segments. To calculate the
       physics I used an idealized
       <a
         href="https://introcs.cs.princeton.edu/java/assignments/collisions.html"
@@ -23,8 +23,8 @@
       The project is mainly based on the following sources:
       <ul>
         <li>
-          <a href="https://algs4.cs.princeton.edu/61event/">The chapter</a>
-          from Princeton algorithm course. Title is originated from it!
+          <a href="https://algs4.cs.princeton.edu/61event/">The chapter</a> from
+          Princeton algorithm course. The title originated from it!
         </li>
         <li>
           <a
@@ -32,7 +32,7 @@
             target="_blank"
             >Convey's game of life</a
           >
-          from the rust-wasm book. Beautiful and detailed example.
+          from the rust-wasm book. A beautiful and detailed example.
         </li>
       </ul>
     </div>

@@ -5,20 +5,18 @@
       Even though game engines usually don't use this approach directly to
       simulate physics, event-driven is still widely adopted in game
       development. For example, it can be used to implement communication
-      mechanisms between different parts of the game engine. Nevertheless, I've
-      built my own game with <s>blackjack and hookers</s> particles and
-      collisions.
+      mechanisms between different parts of the game engine.
     </p>
     <p>
       The rules of the game are simple. Use your mouse to control the red
       particle <font-awesome-icon icon="circle" style="color: red" />. Avoid
       collisions with other particles and walls of the domain as long as you
-      can. The score of the game is just a number of deciseconds passed since
-      the start.
+      can. The score of the game is just a number of seconds passed since the
+      start, multiplied by 10.
     </p>
     <p>
-      By the way it doesn't work well on mobile devices. Use mouse for the
-      better game experience.
+      By the way it doesn't work well on mobile devices. Use a mouse for the
+      best game experience.
     </p>
     <p>
       <b
