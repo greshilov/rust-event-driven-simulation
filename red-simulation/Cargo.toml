@@ -32,7 +32,7 @@ serde_json = "1.0.72"
 serde = { version = "1.0.130", features = ["derive"] }
 
 [dependencies.web-sys]
-version = "0.3.55"
+version = "0.3.60"
 features = [
     "console",
     "CanvasRenderingContext2d",
