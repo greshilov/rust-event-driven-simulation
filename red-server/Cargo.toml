@@ -10,7 +10,7 @@ edition = "2018"
 rocket = "0.4.10"
 dotenv = "0.15.0"
 diesel = { version = "1.4.8", features = ["postgres", "chrono", "uuidv07"] }
-chrono = { version = "0.4.19", features = ["serde"] }
+chrono = { version = "0.4.22", features = ["serde"] }
 rocket_contrib = { version = "0.4.10", features = ["json"] }
 serde = { version = "1.0.130", features = ["derive"] }
 serde_json = "1.0.72"
